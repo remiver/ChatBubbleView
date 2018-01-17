@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="10px"
+    android:paddingLeft="32px"
+    android:paddingTop="5px"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/iv_car_chat_msg_usericon"
+        android:layout_width="48px"
+        android:layout_height="48px"
+        android:layout_marginLeft="16px"
+        android:layout_marginTop="4px"
+        android:scaleType="centerInside"
+        android:background="#ff0000"/>
+
+    <me.jayl.android.ChatBubbleView
+        android:id="@+id/view_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_text"
+        android:layout_alignRight="@+id/tv_text"
+        android:layout_alignTop="@+id/tv_text"
+        android:layout_alignBottom="@+id/tv_text"
+        app:cbv_top_src="@drawable/src_bubble_left_top"
+        app:cbv_arrow_src="@drawable/src_bubble_left_arrow"
+        app:cbv_bottom_src="@drawable/src_bubble_left_bottom"
+        app:cbv_top_src_pressed="@drawable/src_bubble_left_top_pressed"
+        app:cbv_arrow_src_pressed="@drawable/src_bubble_left_arrow_pressed"
+        app:cbv_bottom_src_pressed="@drawable/src_bubble_left_bottom_pressed"
+        app:cbv_arrow_height="14px"
+        app:cbv_arrow_position="28px">
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="35px"
+            android:paddingRight="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:minWidth="90px"
+            android:minHeight="56px"
+            android:gravity="center_vertical"
+            android:textColor="#000000"
+            android:textSize="16px"
+            tools:text="Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an AS IS BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License."/>
+
+    </me.jayl.android.ChatBubbleView>
+
+</LinearLayout>

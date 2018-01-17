@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ChatBubbleView">
+        <attr name="cbv_top_src" format="reference" />
+        <attr name="cbv_arrow_src" format="reference" />
+        <attr name="cbv_bottom_src" format="reference" />
+        <attr name="cbv_top_src_pressed" format="reference" />
+        <attr name="cbv_arrow_src_pressed" format="reference" />
+        <attr name="cbv_bottom_src_pressed" format="reference" />
+        <attr name="cbv_arrow_height" format="dimension" />
+        <attr name="cbv_arrow_position" format="dimension" />
+    </declare-styleable>
+</resources>
