@@ -126,6 +126,7 @@ public class ChatBubbleView extends RelativeLayout {
     }*/
 
     private void init() {
+        setClipToPadding(false);
         // init Views
         mViewTop = new BubbleContainerView(getContext());
         mViewArrow = new BubbleContainerView(getContext());

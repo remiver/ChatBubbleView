@@ -30,20 +30,20 @@
         app:cbv_top_src="@drawable/src_bubble_left_top"
         app:cbv_arrow_src="@drawable/src_bubble_left_arrow"
         app:cbv_bottom_src="@drawable/src_bubble_left_bottom"
-        app:cbv_top_src_pressed="@drawable/src_bubble_left_top_pressed"
-        app:cbv_arrow_src_pressed="@drawable/src_bubble_left_arrow_pressed"
-        app:cbv_bottom_src_pressed="@drawable/src_bubble_left_bottom_pressed"
+        app:cbv_top_src_pressed="@drawable/src_bubble_left_top_focus"
+        app:cbv_arrow_src_pressed="@drawable/src_bubble_left_arrow_focus"
+        app:cbv_bottom_src_pressed="@drawable/src_bubble_left_bottom_focus"
         app:cbv_arrow_height="14px"
-        app:cbv_arrow_position="28px">
+        app:cbv_arrow_position="28px"
+        android:paddingLeft="35px"
+        android:paddingRight="20px"
+        android:paddingTop="10px"
+        android:paddingBottom="10px">
 
         <TextView
             android:id="@+id/tv_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="35px"
-            android:paddingRight="20px"
-            android:paddingTop="10px"
-            android:paddingBottom="10px"
             android:minWidth="90px"
             android:minHeight="56px"
             android:gravity="center_vertical"
