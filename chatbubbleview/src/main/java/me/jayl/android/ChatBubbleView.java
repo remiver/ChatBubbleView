@@ -2,16 +2,12 @@ package me.jayl.android;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 /**
  * Chat bubble view
@@ -88,14 +84,14 @@ public class ChatBubbleView extends RelativeLayout {
     public void setArrowHeight(int height) {
         if (mArrowHeight != height) {
             mArrowHeight = height;
-            invalidateBubbleViews();
+            layoutBubbleViews(mHorizontalSpaceTotal, mVerticalSpaceTotal);
         }
     }
 
     public void setArrowPosition(int position) {
         if (mArrowPosition != position) {
             mArrowPosition = position;
-            invalidateBubbleViews();
+            layoutBubbleViews(mHorizontalSpaceTotal, mVerticalSpaceTotal);
         }
     }
 
@@ -131,12 +127,12 @@ public class ChatBubbleView extends RelativeLayout {
 
     private void init() {
         // init Views
-        mViewTop = new View(getContext());
-        mViewArrow = new View(getContext());
-        mViewBottom = new View(getContext());
+        mViewTop = new BubbleContainerView(getContext());
+        mViewArrow = new BubbleContainerView(getContext());
+        mViewBottom = new BubbleContainerView(getContext());
 
         // init view attrs
-        invalidateBubbleViews();
+        //invalidateBubbleViews();
         // init res
         invalidateViewRes(mViewTop, mResTop);
         invalidateViewRes(mViewArrow, mResArrow);
@@ -147,94 +143,6 @@ public class ChatBubbleView extends RelativeLayout {
         addView(mViewBottom);
     }
 
-    private void invalidateBubbleViews() {
-        invalidateBubbleViews(getMeasuredWidth(), getMeasuredHeight());
-    }
-
-    private int mVerticalSpaceTotal;
-    private int mHorizontalSpaceTotal;
-    private int mVerticalSpaceConsumed;
-    private void invalidateBubbleViews(int width, int height) {
-        mVerticalSpaceTotal = height;
-        mHorizontalSpaceTotal = width;
-        mVerticalSpaceConsumed = 0;
-
-        invalidateTop();
-        invalidateArrow();
-        invalidateBottom();
-    }
-
-    private void invalidateTop() {
-        if (0 == mVerticalSpaceTotal) {
-            mViewTop.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
-            return;
-        }
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mViewTop.getLayoutParams();
-
-        int desiredWidth = mHorizontalSpaceTotal;
-        int desiredHeight = max(0, mArrowPosition - mArrowHeight / 2);
-        if (desiredHeight > mVerticalSpaceTotal - mArrowHeight) {
-            desiredHeight = mVerticalSpaceTotal - mArrowHeight;
-        }
-
-        if (null == params) {
-            params = new RelativeLayout.LayoutParams(desiredWidth, desiredHeight);
-        }else {
-            params.width = desiredWidth;
-            params.height = desiredHeight;
-        }
-
-        mVerticalSpaceConsumed += params.height;
-
-        log("invalidateTop, " + params.width + ", " + params.height + ", space: " + mVerticalSpaceConsumed + " / " + mVerticalSpaceTotal);
-        mViewTop.setLayoutParams(params);
-    }
-
-    private void invalidateArrow() {
-        if (0 == mVerticalSpaceTotal) {
-            mViewArrow.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
-            return;
-        }
-
-        int desiredHeight = max(0, min(mArrowHeight, mVerticalSpaceTotal - mVerticalSpaceConsumed));
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mViewArrow.getLayoutParams();
-        if (null == params) {
-            params = new RelativeLayout.LayoutParams(mHorizontalSpaceTotal, desiredHeight);
-        }else {
-            params.width = mHorizontalSpaceTotal;
-            params.height = desiredHeight;
-        }
-
-        params.topMargin = mVerticalSpaceConsumed;
-        mVerticalSpaceConsumed += desiredHeight;
-
-        log("invalidateArrow, " + params.width + ", " + params.height + ", space: " + mVerticalSpaceConsumed + " / " + mVerticalSpaceTotal);
-        mViewArrow.setLayoutParams(params);
-    }
-
-    private void invalidateBottom() {
-        if (0 == mVerticalSpaceTotal) {
-            mViewBottom.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
-            return;
-        }
-
-        int desiredHeight = max(0, mVerticalSpaceTotal - mVerticalSpaceConsumed);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mViewBottom.getLayoutParams();
-        if (null == params) {
-            params = new RelativeLayout.LayoutParams(mHorizontalSpaceTotal, desiredHeight);
-        }else {
-            params.width = mHorizontalSpaceTotal;
-            params.height = desiredHeight;
-        }
-
-        params.topMargin = mVerticalSpaceConsumed;
-        log("invalidateBottom, " + params.width + ", " + params.height + ", space: " + mVerticalSpaceConsumed + " / " + mVerticalSpaceTotal);
-        mViewBottom.setLayoutParams(params);
-    }
-
     private boolean invalidateViewRes(View target, int resId) {
         target.setBackgroundResource(resId);
 
@@ -242,25 +150,25 @@ public class ChatBubbleView extends RelativeLayout {
     }
 
     @Override
-    public void invalidate() {
-        log("invalidate");
-        invalidateBubbleViews();
-        super.invalidate();
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        log("measure");
-        View target = getChildAt(3);
-        target.measure(widthMeasureSpec, heightMeasureSpec);
-        invalidateBubbleViews(target.getMeasuredWidth(), target.getMeasuredHeight());
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+        mHorizontalSpaceTotal = r - l;
+        mVerticalSpaceTotal = b - t;
+        layoutBubbleViews(mHorizontalSpaceTotal, mVerticalSpaceTotal);
+    }
+
+    private void layoutBubbleViews(int widthTotal, int heightTotal) {
+        int line1 = mArrowPosition - mArrowHeight / 2;
+        int line2 = mArrowPosition + mArrowHeight / 2;
+
+        mViewTop.layout(0, 0, widthTotal, line1);
+        mViewArrow.layout(0, line1, widthTotal, line2);
+        mViewBottom.layout(0, line2, widthTotal, heightTotal);
     }
 
     private boolean bPressed;
@@ -303,6 +211,8 @@ public class ChatBubbleView extends RelativeLayout {
         }
     }
 
+    private int mHorizontalSpaceTotal;
+    private int mVerticalSpaceTotal;
     private void judgeClick(float upX, float upY) {
         if (upX >= 0 && upX <= mHorizontalSpaceTotal
                 && upY >= 0 && upY <= mVerticalSpaceTotal) {
@@ -314,6 +224,20 @@ public class ChatBubbleView extends RelativeLayout {
     private void log(String msg) {
         if (DEBUG) {
             Log.i("ChatBubbleView", msg);
+        }
+    }
+
+    private static class BubbleContainerView extends View {
+
+        private LayoutParams mFakeParam = new LayoutParams(0, 0);
+
+        public BubbleContainerView(Context context) {
+            super(context);
+        }
+
+        @Override
+        public LayoutParams getLayoutParams() {
+            return mFakeParam;
         }
     }
 }
